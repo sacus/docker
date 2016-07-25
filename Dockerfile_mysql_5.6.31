@@ -1,0 +1,59 @@
+#mysql dockerfile by clc
+
+#env pre
+
+FROM docker.io/centos
+
+RUN mkdir /application && \
+rm -rf /var/cache/yum/x86_64/* && rm -rf /var/tmp/* && \
+curl -fSL http://mirrors.aliyun.com/repo/Centos-7.repo -o /etc/yum.repos.d/CentOS-Base.repo && \
+curl -fSL http://mirrors.aliyun.com/repo/epel-7.repo -o /etc/yum.repos.d/epel.repo && \
+yum install gcc gcc-c++ libaio-devel ncurses-devel cmake tar perl perl-devel perl-Module-Install.noarch  -y && \
+rm -rf /var/cache/yum/x86_64/* && rm -rf /var/tmp/*  && \
+useradd mysql -s /sbin/nologin -M && \
+curl -fSL http://mirrors.sohu.com/mysql/MySQL-5.6/mysql-5.6.31.tar.gz -o /mysql-5.6.31.tar.gz
+
+#install mysql
+
+RUN tar -zxf /mysql-5.6.31.tar.gz && \
+cd mysql-5.6.31 && \
+cmake . -DCMAKE_INSTALL_PREFIX=/application/mysql-5.6.31 \
+-DMYSQL_DATADIR=/application/mysql-5.6.31/data \
+-DMYSQL_UNIX_ADDR=/application/mysql-5.6.31/tmp/mysql.sock \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DEXTRA_CHARSETS=gbk,gb2312,utf8,ascii \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DENABLED_LOCAL_INFILE=ON \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+-DWITH_FEDERATED_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DWITHOUT_EXAMPLE_STORAGE_ENGINE=1 \
+-DWITH_PERFSCHEMA_STORAGE_ENGINE=1 \
+-DWITH_FAST_MUTEXES=1 \
+-DWITH_READLINE=1 \
+-DWITH_ZLIB=bundled \
+-DENABLED_LOCAL_INFILE=1 \
+-DWITH_DEBUG=0 \
+-DWITH_EMBEDDED_SERVER=1 && \
+make -j 8 && make install && \
+ln -s /application/mysql-5.6.31 /application/mysql && \
+rm -rf /mysql-5.6.31* 
+
+#init_data
+
+RUN chmod  -R 1777 /tmp && \
+chown -R mysql:mysql /application/mysql/data && \
+ln -s /application/mysql/bin/* /usr/local/bin/ && \
+/application/mysql/scripts/mysql_install_db \
+--basedir=/application/mysql \
+--datadir=/application/mysql/data \
+--user=mysql  \
+
+ENV MYSQL_VERSION 5.6.31
+EXPOSE 3306
+CMD ["mysqld_safe","defaults-file=/application/mysql/my.cnf","--user=mysql"]  
+
+
+
+
