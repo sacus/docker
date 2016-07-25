@@ -1,13 +1,14 @@
 #Version:1
 #author:clc
 #base images
-FROM docker.io/sacus/php5.6.23 
+FROM docker.io/centos
 MAINTAINER 474335602@qq.com
 ENV NGINX_VERSION 1.10.1
 #commands
 
 #env-pre
-RUN rm -rf /var/cache/yum/x86_64/6/*　&& \
+RUN  mkdir /application && \
+rm -rf /var/cache/yum/x86_64/7/*　&& \
 builddeps=" \
 pcre \
 pcre-devel \
@@ -17,10 +18,11 @@ tar \
 gcc \
 " \
 && yum install -y ${builddeps} && \
-rm -rf /var/cache/yum/x86_64/6/*  && \
-rm -rf /home/clc/tools/*
+rm -rf /var/cache/yum/x86_64/7/*
 
-RUN curl -fSL http://nginx.org/download/nginx-1.10.1.tar.gz -o nginx-1.10.1.tar.gz \
+
+RUN useradd nginx -s /sbin/nologin -M && \
+curl -fSL http://nginx.org/download/nginx-1.10.1.tar.gz -o nginx-1.10.1.tar.gz \
 && tar -zxvf nginx-1.10.1.tar.gz && \
 cd nginx-1.10.1  && \
 ./configure --prefix=/application/nginx-1.10.1 \
@@ -32,8 +34,6 @@ make && make install && \
 ln -s /application/nginx-1.10.1 /application/nginx && \
 rm -rf /nginx-1.10.1*
 
-#supervisor configure
+EXPOSE 80 443 
 
-
-EXPOSE 80 9000
-ENTRYPOINT   /application/nginx/sbin/nginx && /application/php/sbin/php-fpm -F 
+CMD ["/application/nginx/sbin/nginx", "-g", "daemon off;"]
