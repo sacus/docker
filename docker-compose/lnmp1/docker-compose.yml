@@ -6,7 +6,7 @@ nginx_a:
             - ./nginx/conf_a/nginx.conf:/application/nginx/conf/nginx.conf:ro
             - ./nginx/conf_a/conf.d:/application/nginx/conf/conf.d:ro
             - ./nginx/log_a:/application/nginx/logs
-            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /root/docker-compose-haproxy-web/lnmp/nginx/uploads:/application/nginx/html/blog/wp-content/uploads
         links:
             - php_a
         volumes_from:
@@ -28,7 +28,7 @@ nginx_b:
             - ./nginx/conf_b/nginx.conf:/application/nginx/conf/nginx.conf:ro
             - ./nginx/conf_b/conf.d:/application/nginx/conf/conf.d:ro
             - ./nginx/log_b:/application/nginx/logs
-            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /root/docker-compose-haproxy-web/lnmp/nginx/uploads:/application/nginx/html/blog/wp-content/uploads
         links:
             - php_b
         volumes_from:
@@ -50,7 +50,7 @@ nginx_c:
             - ./nginx/conf_c/nginx.conf:/application/nginx/conf/nginx.conf:ro
             - ./nginx/conf_c/conf.d:/application/nginx/conf/conf.d:ro
             - ./nginx/log_c:/application/nginx/logs
-            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /root/docker-compose-haproxy-web/lnmp/nginx/uploads:/application/nginx/html/blog/wp-content/uploads
         links:
             - php_c
         volumes_from:
