@@ -1,0 +1,66 @@
+nginx_a: 
+        image: docker.io/sacus/nginx1.10.1:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf_a/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf_a/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/log_a:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+        links:
+            - php_a
+        volumes_from:
+            - php_a
+
+php_a:
+        image: docker.io/sacus/php5.6.23:latest
+        expose: 
+            - 9000
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - ./nginx/html/blog:/application/nginx/html/blog
+
+nginx_b: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf_b/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf_b/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/log_b:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+        links:
+            - php_b
+        volumes_from:
+            - php_b
+
+php_b:
+        image: docker.io/sacus/php5.6.23:latest
+        expose: 
+            - 9000
+        volumes:
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - /etc/localtime:/etc/localtime:ro
+
+nginx_c: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf_c/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf_c/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/log_c:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+        links:
+            - php_c
+        volumes_from:
+            - php_c
+
+php_c:
+        image: docker.io/sacus/php5.6.23:latest
+        expose: 
+            - 9000
+        volumes:
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - /etc/localtime:/etc/localtime:ro
+

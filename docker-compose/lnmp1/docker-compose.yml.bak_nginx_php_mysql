@@ -1,0 +1,27 @@
+nginx_php: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        ports: 
+            - "80:80"
+        volumes: 
+            - ./nginx/conf/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - ./nginx/logs:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /etc/localtime:/etc/localtime:ro
+        links: 
+            - mysql
+
+mysql:
+        image: docker.io/mysql:5.6.31
+        ports: 
+            - "3308:3306"
+        volumes: 
+            - ./mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+            - ./mysql/data:/var/lib/mysql
+            - /etc/localtime:/etc/localtime:ro
+        environment: 
+             MYSQL_ROOT_PASSWORD: 12345678
+             MYSQL_USER: wordpress
+             MYSQL_PASSWORD: 123456
+             MYSQL_DATABASE: wordpress  

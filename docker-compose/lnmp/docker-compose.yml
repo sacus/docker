@@ -1,0 +1,58 @@
+nginx_php_a: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - ./nginx/log_a:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /etc/localtime:/etc/localtime:ro
+
+
+
+nginx_php_b: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - ./nginx/log_b:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /etc/localtime:/etc/localtime:ro
+
+
+nginx_php_c: 
+        image: docker.io/sacus/php5.6.23_nginx_1.10:latest  
+        expose: 
+            - 80
+        volumes: 
+            - ./nginx/conf/nginx.conf:/application/nginx/conf/nginx.conf:ro
+            - ./nginx/conf/conf.d:/application/nginx/conf/conf.d:ro
+            - ./nginx/html/blog:/application/nginx/html/blog
+            - ./nginx/log_c:/application/nginx/logs
+            - ./nginx/uploads:/application/nginx/html/blog/wp-content/uploads
+            - /etc/localtime:/etc/localtime:ro
+
+
+haproxy_blog:
+        image: haproxy:latest
+        volumes:
+            - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+        links:
+            - nginx_php_a
+            - nginx_php_b
+            - nginx_php_c
+        external_links:
+            - lnmp1_nginx_a_1
+            - lnmp1_nginx_b_1
+            - lnmp1_nginx_c_1
+        expose:
+            - "80"
+            - "70"
+        ports:
+            - "80:80"
+            - "70:70" 
