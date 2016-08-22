@@ -1,0 +1,1 @@
+docker run -d -p 80:80 -p 70:70 -v /home/chenlc/docker/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro -v /home/chenlc/docker/haproxy/logs:/var/log -v /etc/localtime:/etc/localtime:ro  --name=haproxy haproxy

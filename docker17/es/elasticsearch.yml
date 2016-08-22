@@ -1,0 +1,3 @@
+discovery.zen.ping.unicast.hosts: ["172.17.0.11"]
+script.inline: on
+script.indexed: on
